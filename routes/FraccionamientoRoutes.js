@@ -1,8 +1,24 @@
 const express = require('express');
 const Fracc =  require('../models/Fraccionamiento');
+const multer = require('multer');
+
 
 const {default:mongoose} = require('mongoose');
 const Fraccionamiento = require('../models/Fraccionamiento');
+
+const storage = multer.diskStorage({
+
+    //configuramos la carpeta del destino del archivo
+    destination: function (req, fiele, cb){
+        cb(null,"uploads/");
+    },
+    filename: function(req,file,cb){
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+
+});
+
+const upload = multer({storage:storage})
 
 
 const createFracc = async (req,res)=>{
@@ -12,9 +28,11 @@ const createFracc = async (req,res)=>{
     if(_fracc){
         return res.status(400).json({
             ok:false,
-            message:'El ya existe'
+            message:'El fraccionamiento ya existe'
         });
     }else{
+
+            const logo = req.file ? req.file.filename:null;
         
             const Fracc_new = new Fracc({
                 nombreFracc:cuerpoRequest.nombreFracc,
@@ -22,7 +40,8 @@ const createFracc = async (req,res)=>{
                 NumeroCasas: cuerpoRequest.NumeroCasas,
                 tipoFraccionamiento: cuerpoRequest.tipoFraccionamiento,
                 zonasInteres: cuerpoRequest.zonasInteres,
-                casasHabitadas: cuerpoRequest.casasHabitadas
+                casasHabitadas: cuerpoRequest.casasHabitadas,
+                logo: logo
                 
             });
 
@@ -100,7 +119,7 @@ const delFracc = async (req,res)=>{
 const router = express.Router();
 //endpoints
 router.route('/')
-                .post(createFracc)
+                .post(upload.single('logo'),createFracc)
                 .get(getAll);
 
 router.route('/:id')

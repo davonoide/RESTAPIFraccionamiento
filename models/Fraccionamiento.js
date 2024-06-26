@@ -28,7 +28,8 @@ const FraccionamientoSchema = new mongoose.Schema({
     casasHabitadas:{
         type:Number, 
         required:[true, 'casas habitadas es un campo obligatorio']
-    }
+    },
+    logo: {type:String}
 
 });
 

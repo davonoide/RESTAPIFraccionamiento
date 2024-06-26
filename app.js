@@ -18,7 +18,7 @@ const app = express(); //app es una instancia de express
 app.use(cors()); //permitir peticiones de otros dominios
 
 app.use(express.json({limit:'50mb'})); //parsear el cuerpo de las peticiones con formato json
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(`${__dirname}/uploads`));
 
 app.set('jwtkey','sd#asdv0%'); //clave secreta para firmar los tokens
 
